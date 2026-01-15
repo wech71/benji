@@ -394,7 +394,7 @@ class NbdServer(ReprMixIn):
         addr, port = self.address
 
         loop = self.loop
-        coro = asyncio.start_server(self.handler, addr, port, loop=loop)
+        coro = asyncio.start_server(self.handler, addr, port) #, loop=loop)
         server = loop.run_until_complete(coro)
 
         loop.add_signal_handler(signal.SIGTERM, loop.stop)
