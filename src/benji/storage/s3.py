@@ -63,6 +63,7 @@ class Storage(ReadCacheStorageBase):
         if signature_version:
             resource_config['signature_version'] = signature_version
 
+        resource_config['max_pool_connections'] = 50
         resource_config['connect_timeout'] = connect_timeout
         resource_config['read_timeout'] = read_timeout
         # See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/retries.html
@@ -91,10 +92,14 @@ class Storage(ReadCacheStorageBase):
     def _write_object(self, key: str, data: bytes) -> None:
         self._init_connection()
         object = self._local.bucket.Object(key)
-        if self._storage_class is not None:
-            object.put(Body=data, StorageClass=self._storage_class)
-        else:
-            object.put(Body=data)
+        try:
+          if self._storage_class is not None:
+              object.put(Body=data, StorageClass=self._storage_class)
+          else:
+              object.put(Body=data)
+        except botocore.exceptions.ClientError as e:
+          print(e.response)
+          raise
 
     def _read_object(self, key: str) -> bytes:
         self._init_connection()
