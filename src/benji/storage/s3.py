@@ -112,14 +112,21 @@ class Storage(ReadCacheStorageBase):
     def _read_object(self, key: str) -> bytes:
         self._init_connection()
         object = self._local.bucket.Object(key)
-        try:
-            data_dict = object.get()
-            data = data_dict['Body'].read()
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'NoSuchKey' or e.response['Error']['Code'] == '404':
-                raise FileNotFoundError('Key {} not found.'.format(key)) from None
+        for attempt in range(0, 10):
+          try:
+              data_dict = object.get()
+              data = data_dict['Body'].read()
+          except ClientError as e:
+            if attempt == 8:
+                print(f"Attempt {attempt} bei key '{key}' fehlgeschlagen => Abbruch. Fehler: {e.response}")
+
+                if e.response['Error']['Code'] == 'NoSuchKey' or e.response['Error']['Code'] == '404':
+                    raise FileNotFoundError('Key {} not found.'.format(key)) from None
+                else:
+                    raise
             else:
-                raise
+                print(f"s3 error bei key '{key}' => retrying in 1 second. Attempt={attempt}")
+                time.sleep(1 + 2 * attempt)
 
         return data
 
