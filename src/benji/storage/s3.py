@@ -4,6 +4,7 @@ import threading
 from typing import Iterable, Union, Tuple
 
 import boto3
+import time
 from botocore.client import Config as BotoCoreClientConfig
 from botocore.exceptions import ClientError
 from botocore.handlers import set_list_objects_encoding_type_url
@@ -92,14 +93,21 @@ class Storage(ReadCacheStorageBase):
     def _write_object(self, key: str, data: bytes) -> None:
         self._init_connection()
         object = self._local.bucket.Object(key)
-        try:
-          if self._storage_class is not None:
-              object.put(Body=data, StorageClass=self._storage_class)
-          else:
-              object.put(Body=data)
-        except botocore.exceptions.ClientError as e:
-          print(e.response)
-          raise
+
+        for attempt in range(0, 10):
+          try:
+            if self._storage_class is not None:
+                object.put(Body=data, StorageClass=self._storage_class)
+            else:
+                object.put(Body=data)
+            return
+          except ClientError as e:
+            if attempt == 8:
+                print(f"Attempt {attempt} bei key '{key}' fehlgeschlagen => Abbruch. Fehler: {e.response}")
+                raise
+            else:
+                print(f"s3 error bei key '{key}' => retrying in 1 second. Attempt={attempt}")
+                time.sleep(1 + 2 * attempt)
 
     def _read_object(self, key: str) -> bytes:
         self._init_connection()
