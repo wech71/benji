@@ -40,3 +40,7 @@ dist
 .b2-account-info*
 tests-scratch
 .mypy_cache
+.venv
+venv.old
+golden-master
+docs/port/baseline/.venv-metadata

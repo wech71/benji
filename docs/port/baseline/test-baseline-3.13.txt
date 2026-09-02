@@ -1,0 +1,182 @@
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting src/benji/tests/storage/test_b2.py ______________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/storage/test_b2.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/storage/__init__.py:6: in <module>
+    from benji.tests.testcase import StorageTestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+____________ ERROR collecting src/benji/tests/storage/test_file.py _____________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/storage/test_file.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/storage/__init__.py:6: in <module>
+    from benji.tests.testcase import StorageTestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+_____________ ERROR collecting src/benji/tests/storage/test_s3.py ______________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/storage/test_s3.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/storage/__init__.py:6: in <module>
+    from benji.tests.testcase import StorageTestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+___________ ERROR collecting src/benji/tests/test_blockuidhistory.py ___________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_blockuidhistory.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_blockuidhistory.py:3: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+_______________ ERROR collecting src/benji/tests/test_config.py ________________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_config.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_config.py:6: in <module>
+    from benji.tests.testcase import TestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+______________ ERROR collecting src/benji/tests/test_database.py _______________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_database.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_database.py:14: in <module>
+    from benji.tests.testcase import DatabaseBackendTestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+____________ ERROR collecting src/benji/tests/test_import_export.py ____________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_import_export.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_import_export.py:13: in <module>
+    from benji.tests.testcase import BenjiTestCaseBase
+src/benji/tests/testcase.py:8: in <module>
+    from benji.benji import Benji
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+_________________ ERROR collecting src/benji/tests/test_nbd.py _________________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_nbd.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_nbd.py:10: in <module>
+    from benji.benji import BenjiStore
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+______________ ERROR collecting src/benji/tests/test_smoketest.py ______________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_smoketest.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_smoketest.py:12: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+________________ ERROR collecting src/benji/tests/test_store.py ________________
+ImportError while importing test module '/mnt/benji-ki-portierung/src/benji/tests/test_store.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/benji/tests/test_store.py:9: in <module>
+    from benji.benji import BenjiStore
+src/benji/benji.py:19: in <module>
+    from benji.blockuidhistory import BlockUidHistory
+src/benji/blockuidhistory.py:3: in <module>
+    from sparsebitfield import SparseBitfield
+E   ModuleNotFoundError: No module named 'sparsebitfield'
+=============================== warnings summary ===============================
+../../tmp/opencode/benji-venv/lib/python3.13/site-packages/pyparsing.py:108
+  /tmp/opencode/benji-venv/lib/python3.13/site-packages/pyparsing.py:108: DeprecationWarning: module 'sre_constants' is deprecated
+    import sre_constants
+
+src/benji/config.py:14
+  /mnt/benji-ki-portierung/src/benji/config.py:14: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import resource_filename
+
+../../tmp/opencode/benji-venv/lib/python3.13/site-packages/pkg_resources/__init__.py:3148
+  /tmp/opencode/benji-venv/lib/python3.13/site-packages/pkg_resources/__init__.py:3148: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('ruamel')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+src/benji/tests/test_keys_exist.py:6
+  /mnt/benji-ki-portierung/src/benji/tests/test_keys_exist.py:6: PytestCollectionWarning: cannot collect test class 'TestClass' because it has a __init__ constructor (from: src/benji/tests/test_keys_exist.py)
+    class TestClass:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR src/benji/tests/storage/test_b2.py
+ERROR src/benji/tests/storage/test_file.py
+ERROR src/benji/tests/storage/test_s3.py
+ERROR src/benji/tests/test_blockuidhistory.py
+ERROR src/benji/tests/test_config.py
+ERROR src/benji/tests/test_database.py
+ERROR src/benji/tests/test_import_export.py
+ERROR src/benji/tests/test_nbd.py
+ERROR src/benji/tests/test_smoketest.py
+ERROR src/benji/tests/test_store.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 10 errors during collection !!!!!!!!!!!!!!!!!!!
+4 warnings, 10 errors in 25.95s

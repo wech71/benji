@@ -1,0 +1,20 @@
+{
+  "ciphertext_hex": "f4278a65570f35b6bedb17c6a040845550c53a467998495bfec94abcd442086819558d6141e613fd433116003571f020452164b87d69e315655308c20b64989b0b53a6fd4575845e9a335ed73b73dd3eeaa1ecd2ea6ad9a0d560ec4a2be7f8a5a892047d2503c451874524f58029898e29b2448d9230a6fbd7dc9b17f66e5dc5",
+  "ciphertext_len": 128,
+  "decapsulation_result": {
+    "decrypted_hex": "deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe",
+    "decrypted_len": 128,
+    "expected_hex": "deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe",
+    "phase": "old_decapsulate",
+    "python": "3.11.9",
+    "verify": "PASS"
+  },
+  "materials": {
+    "envelope_key": "wUdKUN681PnWO8DgMBN/Fuj6a8EdeaMox/LgnSX3skzul0X5/gYBOA==",
+    "iv": "2ykbK4twW/rKTWZdKolW2g=="
+  },
+  "materials_json": "{\"envelope_key\": \"wUdKUN681PnWO8DgMBN/Fuj6a8EdeaMox/LgnSX3skzul0X5/gYBOA==\", \"iv\": \"2ykbK4twW/rKTWZdKolW2g==\"}",
+  "phase": "ported_encapsulate",
+  "plaintext_hex": "deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe",
+  "python": "3.13.5"
+}

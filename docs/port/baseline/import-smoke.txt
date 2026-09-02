@@ -1,0 +1,14 @@
+OK: 33/41  FAIL: 8
+FAIL benji.benji: ModuleNotFoundError: No module named 'sparsebitfield'
+FAIL benji.blockuidhistory: ModuleNotFoundError: No module named 'sparsebitfield'
+FAIL benji.commands: ModuleNotFoundError: No module named 'sparsebitfield'
+FAIL benji.nbdserver: ModuleNotFoundError: No module named 'sparsebitfield'
+FAIL benji.restapi: ModuleNotFoundError: No module named 'cgi'
+FAIL benji.io.iscsi: ModuleNotFoundError: No module named 'libiscsi'
+FAIL benji.io.rbd: ModuleNotFoundError: No module named 'rados'
+FAIL benji.io.rbdaio: ModuleNotFoundError: No module named 'rados'
+
+=== Deprecation warnings (non-exhaustive, per-module first-import) ===
+benji.config: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('ruamel')`.
+Implementing implicit namespace packages (as specified i
+benji.database: DeprecationWarning: module 'sre_constants' is deprecated
