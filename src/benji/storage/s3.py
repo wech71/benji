@@ -127,6 +127,13 @@ class Storage(ReadCacheStorageBase):
             else:
                 print(f"s3 error bei key '{key}' => retrying in 1 second. Attempt={attempt}")
                 time.sleep(1 + 2 * attempt)
+          except urllib3.exceptions.ReadTimeoutError as e:
+            if attempt == 8:
+                print(f"Attempt {attempt} bei key '{key}' fehlgeschlagen => Abbruch. Fehler: urllib3.exceptions.ReadTimeoutError")
+                raise
+            else:
+                print(f"s3 ReadTimeoutError bei key '{key}' => retrying in 1 second. Attempt={attempt}")
+                time.sleep(1 + 2 * attempt)
 
         return data
 
