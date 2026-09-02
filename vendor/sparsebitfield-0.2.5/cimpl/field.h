@@ -1,0 +1,16 @@
+
+typedef unsigned long usize_t;
+typedef usize_t CHUNK;
+
+#define CHUNK_BYTES sizeof(CHUNK)
+#define CHUNK_FULL_COUNT 8 * CHUNK_BYTES // Count of 1s in a full chunk
+
+#define CHUNK_SHIFT (CHUNK_BYTES==1?3:(CHUNK_BYTES==2?4:(CHUNK_BYTES==4?5:(CHUNK_BYTES==8?6:(CHUNK_BYTES==16?7:0)))))
+
+#define CHUNK_MASK ((1 << CHUNK_SHIFT) - 1)
+#define USIZE_MAX ((usize_t)~0)
+#define CHUNK_BITS USIZE_MAX
+
+#define PAGE_CHUNKS (CHUNK_BYTES==1?4096:(CHUNK_BYTES==2?2048:(CHUNK_BYTES==4?1024:(CHUNK_BYTES==8?512:(CHUNK_BYTES==16?256:0)))))
+#define PAGE_FULL_COUNT (CHUNK_FULL_COUNT * PAGE_CHUNKS)
+#define PAGE_BYTES (CHUNK_BYTES * PAGE_CHUNKS)

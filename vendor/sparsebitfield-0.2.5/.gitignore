@@ -1,0 +1,7 @@
+*.pyc
+#*
+*~
+*.iml
+build
+dist
+sparsebitfield.egg-info
