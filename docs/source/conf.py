@@ -69,7 +69,7 @@ version = release.rsplit(".", 1)[0]
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -89,10 +89,8 @@ todo_include_todos = True
 #
 import sphinx_rtd_theme
 html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_theme_options = {
     'collapse_navigation': False,
-    'display_version': False,
     'navigation_depth': 3,
 }
 #html_theme = 'nature'
@@ -158,5 +156,5 @@ texinfo_documents = [
 
 
 def setup(app):
-    app.add_stylesheet('asciinema/asciinema-player.css')
-    app.add_javascript('asciinema/asciinema-player.js')
+    app.add_css_file('asciinema/asciinema-player.css')
+    app.add_js_file('asciinema/asciinema-player.js')

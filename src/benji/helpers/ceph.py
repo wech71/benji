@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from tempfile import NamedTemporaryFile
 from typing import Dict, Any, Optional
 
@@ -75,7 +75,7 @@ def backup_initial(*,
                    source_compare: bool = False,
                    context: Any = None) -> Dict[str, str]:
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     snapshot = now.strftime(RBD_SNAP_NAME_PREFIX + '%Y-%m-%dT%H:%M:%SZ')
     image_path = _rbd_image_path(pool=pool, namespace=namespace, image=image)
     snapshot_path = _rbd_image_path(pool=pool, namespace=namespace, image=image, snapshot=snapshot)
@@ -119,7 +119,7 @@ def backup_differential(*,
                         source_compare: bool = False,
                         context: Any = None) -> Dict[str, str]:
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     snapshot = now.strftime(RBD_SNAP_NAME_PREFIX + '%Y-%m-%dT%H:%M:%SZ')
     image_path = _rbd_image_path(pool=pool, namespace=namespace, image=image)
     snapshot_path = _rbd_image_path(pool=pool, namespace=namespace, image=image, snapshot=snapshot)

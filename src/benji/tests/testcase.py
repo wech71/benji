@@ -12,11 +12,18 @@ from benji.io.factory import IOFactory
 from benji.logging import setup_logging
 from benji.storage.factory import StorageFactory
 
+# Resolve the scratch directory from this file's location so the tests are
+# independent of the current working directory pytest is launched from.
+# testcase.py lives at <repo-root>/src/benji/tests/testcase.py, so three
+# levels up is the repository root.
+_SCRATCH_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests-scratch'))
+
 
 class _TestPath:
 
     def __init__(self):
-        self.path = '../../../tests-scratch/benji-test_' + TestCaseBase.random_string(16)
+        self.path = os.path.join(_SCRATCH_ROOT, 'benji-test_' + TestCaseBase.random_string(16))
         for dir in [
                 self.path,
                 self.path + '/data',

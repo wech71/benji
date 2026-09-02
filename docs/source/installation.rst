@@ -54,34 +54,35 @@ can be installed via private repository::
 Common to All Distributions
 ---------------------------
 
-After installing a recent Python version, it is now time to install Benji and its dependencies::
+.. NOTE:: This fork targets **Python 3.13** on **Debian 13 (Trixie)** / **Proxmox VE 9**.
+   The installation instructions below reflect the new target. Older distribution
+   sections are kept for reference but may be outdated.
+
+After installing Python 3.13, install Benji and its dependencies::
 
     # Create new virtual environment
-    python3.6 -m venv /usr/local/benji
+    python3.13 -m venv /usr/local/benji
     # Activate it (your shell prompt should change)
     . /usr/local/benji/bin/activate
-    # Alternative A: Install a specific released version from PyPI (0.8.0)
-    pip install benji==0.8.0
-    # Alternative B: Install the latest released version from PyPI
-    pip install benji
-    # Alternative C: Install the latest version from the master branch of the Git repository
-    pip install git+https://github.com/elemental-lf/benji
+    # Install the sparsebitfield dependency (vendored, patched for Python 3.13)
+    pip install vendor/sparsebitfield-0.2.5/
+    # Install benji in editable mode from the repository
+    pip install -e .
+    # Install optional features
+    pip install -e ".[compression,s3]"
 
 For certain features additional dependencies are needed. These are referenced by a symbolic name:
 
-- ``s3``: AWS S3 object storage support
+- ``s3``: AWS S3 object storage support (boto3)
 - ``b2``: Backblaze's B2 Cloud object storage support
-- ``compression``: Compression support
-
-Specify any extra extra features as a comma delimited list in square brackets after the package URL::
-
-    pip install benji[compression,s3,readcache,b2]==0.8.0
-
-
-To upgrade an existing installation use the same command line but add the ``--upgrade`` option.
+- ``compression``: Compression support (zstandard)
 
 .. NOTE:: It is recommended to install and use the compression feature for almost all use cases as it decreases storage
    space usage significantly.
+
+.. NOTE:: This port replaces Cerberus with Pydantic v2 for internal config validation.
+   The YAML config syntax is unchanged - no user-facing configuration changes are needed.
+   See ``docs/port/phase-d5-error-differences.md`` for details on error message differences.
 
 Ceph RBD Support
 ----------------
@@ -155,4 +156,4 @@ RHEL/CentOS 7 the procedure looks like this::
     pip install "git+https://github.com/ceph/ceph@v$CEPH_VERSION#subdirectory=src/pybind/rados"
     pip install "git+https://github.com/ceph/ceph@v$CEPH_VERSION#subdirectory=src/pybind/rbd"
 
-.. NOTE:: Benji has only been tested with Luminous and later versions of Ceph's Python bindings.
+.. NOTE:: Benji has only been tested with Luminous to Squid and later versions of Ceph's Python bindings.

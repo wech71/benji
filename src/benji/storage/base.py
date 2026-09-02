@@ -123,7 +123,11 @@ class StorageBase(ReprMixIn, metaclass=ABCMeta):
                         transforms_metadata: List[Dict] = None,
                         checksum: str = None) -> Tuple[Dict, bytes]:
 
-        timestamp = datetime.datetime.utcnow().isoformat(timespec='microseconds') + 'Z'
+        # Produce a naive-UTC datetime so isoformat() emits no offset and the
+        # trailing 'Z' yields the exact 'YYYY-MM-DDTHH:MM:SS.ffffffZ' format
+        # written by the original datetime.utcnow() call (byte-parity: this
+        # timestamp is stored in object metadata checked by the golden master).
+        timestamp = datetime.datetime.now(datetime.UTC).replace(tzinfo=None).isoformat(timespec='microseconds') + 'Z'
         metadata: Dict = {
             self._CREATED_KEY: timestamp,
             self._METADATA_VERSION_KEY: str(VERSIONS.object_metadata.current),

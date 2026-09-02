@@ -4,7 +4,7 @@ License: BSD
 Packages: pycryptodome
 License: BSD , Public Domain
 
-Packages: sqlalchemy boto3 alembic ruamel.yaml aes-keywrap
+Packages: sqlalchemy boto3 alembic ruamel.yaml aes-keywrap pyparsing attrs structlog pydantic
 License: MIT
 
 Packages: psycopg2
@@ -19,6 +19,21 @@ Packages: diskcache
 Copyright:
     2016-2018 Grant Jenks
 License: Apache 2.0
+
+Packages: argcomplete
+License: Apache 2.0
+
+Packages: cerberus
+License: ISC
+
+Packages: dateparser
+License: BSD-3-Clause
+
+Packages: semantic-version
+License: BSD
+
+Packages: colorama
+License: BSD
 
 Files: src/benji/retentionfilter.py
 Copyright:

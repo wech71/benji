@@ -370,7 +370,7 @@ class Version(Base, ReprMixIn):
             block_size=block_size,
             status=status,
             protected=protected,
-            date=datetime.datetime.utcnow(),
+            date=datetime.datetime.now(datetime.UTC),
         )
         try:
             Session.add(version)
@@ -390,7 +390,7 @@ class Version(Base, ReprMixIn):
                     deleted_block = DeletedBlock(
                         storage_id=self.storage_id,
                         uid=affected_block.uid,
-                        date=datetime.datetime.utcnow(),
+                        date=datetime.datetime.now(datetime.UTC),
                     )
                     Session.add(deleted_block)
             # The following delete statement will cascade this delete to the blocks table
@@ -829,7 +829,9 @@ class DeletedBlock(Base, ReprMixIn):
         rounds = 0
         false_positives_count = 0
         hit_list_count = 0
-        cut_off_date = datetime.datetime.utcnow() - datetime.timedelta(seconds=dt)
+        # DeletedBlock.date is stored naive-UTC; keep cut_off_date naive-UTC
+        # so the comparison is apples-to-apples.
+        cut_off_date = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(seconds=dt)
         while True:
             # http://stackoverflow.com/questions/7389759/memory-efficient-built-in-sqlalchemy-iterator-generator
             delete_candidates = Session.scalars(select(DeletedBlock) \
@@ -1441,7 +1443,7 @@ class _Locking:
                 host=self._host,
                 process_id=self._process_id(),
                 reason=reason,
-                date=datetime.datetime.utcnow(),
+                date=datetime.datetime.now(datetime.UTC),
             )
             if override_lock:
                 logger.warn('Will override any existing lock.')
@@ -1567,7 +1569,7 @@ class _QueryBuilder:
     @staticmethod
     def _define_parser() -> Any:
 
-        pyparsing.ParserElement.enablePackrat()
+        pyparsing.ParserElement.enable_packrat()
 
         class Buildable:
 
@@ -1646,13 +1648,13 @@ class _QueryBuilder:
         for attribute in sqlalchemy.inspect(Version).mapper.column_attrs:
             attributes.append(attribute.key)
 
-        identifier = pyparsing.Regex('|'.join(attributes)).setParseAction(lambda s, l, t: IdentifierToken(t[0]))
+        identifier = pyparsing.Regex('|'.join(attributes)).set_parse_action(lambda s, l, t: IdentifierToken(t[0]))
         integer = pyparsing.pyparsing_common.signed_integer
-        string = pyparsing.quotedString().setParseAction(pyparsing.removeQuotes)
-        bool_true = pyparsing.Keyword('True').setParseAction(pyparsing.replaceWith(True))
-        bool_false = pyparsing.Keyword('False').setParseAction(pyparsing.replaceWith(False))
+        string = pyparsing.quotedString().set_parse_action(pyparsing.remove_quotes)
+        bool_true = pyparsing.Keyword('True').set_parse_action(pyparsing.replace_with(True))
+        bool_false = pyparsing.Keyword('False').set_parse_action(pyparsing.replace_with(False))
         label = (pyparsing.Literal('labels') + pyparsing.Literal('[') + string +
-                 pyparsing.Literal(']')).setParseAction(lambda s, l, t: LabelToken(t[2]))
+                 pyparsing.Literal(']')).set_parse_action(lambda s, l, t: LabelToken(t[2]))
         atom = identifier | integer | string | bool_true | bool_false | label
 
         class BinaryOp(Buildable):
@@ -1726,7 +1728,7 @@ class _QueryBuilder:
             def build(self) -> sqlalchemy.sql.elements.BooleanClauseList:
                 return sqlalchemy.not_(self.args[0].build())
 
-        return pyparsing.infixNotation(atom, [
+        return pyparsing.infix_notation(atom, [
             ("==", 2, pyparsing.opAssoc.LEFT, EqOp),
             ("!=", 2, pyparsing.opAssoc.LEFT, NeOp),
             ("<=", 2, pyparsing.opAssoc.LEFT, LeOp),
@@ -1746,7 +1748,7 @@ class _QueryBuilder:
             query = select(Version)
         if filter_expression:
             try:
-                parsed_filter_expression = self._parser.parseString(filter_expression, parseAll=True)[0]
+                parsed_filter_expression = self._parser.parse_string(filter_expression, parse_all=True)[0]
             except (pyparsing.ParseException, pyparsing.ParseFatalException) as exception:
                 raise UsageError('Invalid filter expression {}.'.format(filter_expression)) from exception
             try:

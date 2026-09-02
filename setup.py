@@ -55,19 +55,26 @@ Topic :: System :: Archiving :: Backup
         'setproctitle>=1.1.8,<2',
         'python-dateutil>=2.6.0,<3',
         'alembic>=1.10.2,<2',
-        'ruamel.yaml>0.16,<0.17',
+        'ruamel.yaml>=0.18,<0.19',
         'psycopg2-binary>=2.7.4,<3',
         'argcomplete>=1.9.4,<2',
-        'sparsebitfield>=0.2.5,<1',
-        'cerberus>=1.2,<2',
+        # sparsebitfield 0.2.5 from PyPI does not build on Python 3.13
+        # (Cython-generated cimpl/field.c uses removed CPython internals).
+        # A patched, Cython-3-regenerated copy is vendored under vendor/.
+        # The .post1 version marks the patched build; install it first:
+        #   pip install vendor/sparsebitfield-0.2.5/ && pip install -e .
+        # See docs/port/dependency-changes.md (C7) for details.
+        'sparsebitfield>=0.2.5.post1,<1',
+        'cerberus>=1.2,<2',  # Phase D: retained temporarily, will be removed
+        'pydantic>=2.5,<3',
         'pycryptodome>=3.6.1,<4',
-        'pyparsing>=2.3.0,<3',
+        'pyparsing>=3.1,<4',
         'semantic_version>=2.8.1,<3',
         'dateparser>=1.1.1,<2',
-        'structlog>=19.1.0',
+        'structlog>=19.1.0,<27',
         'colorama>=0.4.1,<1',
-        'diskcache>=3.0.6',
-        'attrs >=21.4.0,<22',
+        'diskcache>=3.0.6,<6',
+        'attrs>=23,<25',
     ],
     extras_require={
         's3': ['boto3>=1.15.0'],
