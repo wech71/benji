@@ -3,19 +3,25 @@
 import operator
 import os
 import re
-from copy import deepcopy
 from functools import reduce
 from os.path import expanduser
 from typing import List, Callable, Union, Dict, Any, Optional, Sequence
 
 import ruamel.yaml
 import semantic_version
-from cerberus import Validator, SchemaError
-from pkg_resources import resource_filename
+from pydantic import ValidationError
 
+from benji.config_models import get_model_for_module, _BenjiBaseModel
 from benji.exception import ConfigurationError, InternalError
 from benji.logging import logger
 from benji.versions import VERSIONS
+
+# ruamel.yaml 0.18 removed the top-level load(stream, Loader=...) helper.
+# Use a single safe-loader YAML instance for all parsing in this module.
+# Safe loading produces plain dict/list/str/int/float/bool/None — identical
+# parsing semantics to the previous ruamel.yaml.SafeLoader, so config and
+# schema content is parsed byte-for-byte the same as on ruamel.yaml 0.16.
+_YAML = ruamel.yaml.YAML(typ='safe')
 
 
 class ConfigDict(dict):
@@ -37,70 +43,12 @@ class Config:
     _CONFIG_FILE = 'benji.yaml'
     _CONFIGURATION_VERSION_KEY = 'configurationVersion'
     _CONFIGURATION_VERSION_REGEX = r'\d+'
-    _PARENTS_KEY = 'parents'
-    _YAML_SUFFIX = '.yaml'
 
     _SCHEMA_VERSIONS = [semantic_version.Version(major=1, minor=0, patch=0)]
-
-    _schema_registry: Dict[str, Dict] = {}
 
     @staticmethod
     def _schema_name(module: str, version: semantic_version.Version) -> str:
         return '{}-v{}'.format(module, version.major)
-
-    @classmethod
-    def add_schema(cls, *, module: str, version: semantic_version.Version, file: str) -> None:
-        name = cls._schema_name(module, version)
-        try:
-            with open(file, 'r') as f:
-                schema = ruamel.yaml.load(f, Loader=ruamel.yaml.SafeLoader)
-            cls._schema_registry[name] = schema
-        except FileNotFoundError:
-            raise InternalError('Schema {} not found or not accessible.'.format(file))
-        except SchemaError as exception:
-            raise InternalError('Schema {} is invalid.'.format(file)) from exception
-
-    def _merge_dicts(self, result, parent):
-        if isinstance(result, dict) and isinstance(parent, dict):
-            for k, v in parent.items():
-                if k not in result:
-                    result[k] = deepcopy(v)
-                else:
-                    result[k] = self._merge_dicts(result[k], v)
-        return result
-
-    def _resolve_schema(self, *, name: str) -> Dict:
-        try:
-            child = self._schema_registry[name]
-        except KeyError:
-            raise InternalError('Schema for module {} is missing.'.format(name))
-        result: Dict = {}
-        if self._PARENTS_KEY in child:
-            parent_names = child[self._PARENTS_KEY]
-            for parent_name in parent_names:
-                parent = self._resolve_schema(name=parent_name)
-                self._merge_dicts(result, parent)
-        result = self._merge_dicts(result, child)
-        if self._PARENTS_KEY in result:
-            del result[self._PARENTS_KEY]
-        logger.debug('Resolved schema for {}: {}.'.format(name, result))
-        return result
-
-    class _Validator(Validator):
-
-        def _normalize_coerce_to_string(self, value):
-            return str(value)
-
-    def _get_validator(self, *, module: str, version: semantic_version.Version) -> Validator:
-        name = self._schema_name(module, version)
-        schema = self._resolve_schema(name=name)
-        try:
-            validator = Config._Validator(schema)
-        except SchemaError as exception:
-            logger.error('Schema {} validation errors:'.format(name))
-            self._output_validation_errors(exception.args[0])
-            raise InternalError('Schema {} is invalid.'.format(name)) from exception
-        return validator
 
     @staticmethod
     def _output_validation_errors(errors) -> None:
@@ -123,13 +71,28 @@ class Config:
                  module: str,
                  version: semantic_version.Version = None,
                  config: Union[Dict, ConfigDict]) -> Dict:
-        validator = self._get_validator(module=module, version=self._config_version if version is None else version)
-        if not validator.validate({'configuration': config if config is not None else {}}):
-            logger.error('Configuration validation errors:')
-            self._output_validation_errors(validator.errors)
-            raise ConfigurationError('Configuration for module {} is invalid.'.format(module))
+        version = self._config_version if version is None else version
+        try:
+            model_cls = get_model_for_module(module, version.major)
+        except KeyError:
+            raise InternalError('No configuration model registered for module {}.'.format(module))
 
-        config_validated = validator.document['configuration']
+        try:
+            if issubclass(model_cls, _BenjiBaseModel):
+                if module == __name__:
+                    model = model_cls.model_validate(config)
+                else:
+                    model = model_cls.model_validate(config if config is not None else {})
+                config_validated = model.to_config_dict()
+            else:
+                raise InternalError('Model for module {} is not a _BenjiBaseModel.'.format(module))
+        except ValidationError as exception:
+            logger.error('Configuration validation errors:')
+            for error in exception.errors():
+                loc = '.'.join(str(x) for x in error['loc'])
+                logger.error('  {}: {}'.format(loc, error['msg']))
+            raise ConfigurationError('Configuration for module {} is invalid.'.format(module)) from exception
+
         # This output leaks sensitive information. Only reinstate when such infos are redacted somehow.
         # logger.debug('Configuration for module {}: {}.'.format(module, config_validated))
         return config_validated
@@ -144,7 +107,7 @@ class Config:
                 if os.path.isfile(source):
                     try:
                         with open(source, 'r') as f:
-                            config = ruamel.yaml.load(f, Loader=ruamel.yaml.SafeLoader)
+                            config = _YAML.load(f)
                     except Exception as exception:
                         raise ConfigurationError('Configuration file {} is invalid.'.format(source)) from exception
                     if config is None:
@@ -155,7 +118,7 @@ class Config:
                 raise ConfigurationError('No configuration file found in the default places ({}).'.format(
                     ', '.join(sources)))
         else:
-            config = ruamel.yaml.load(ad_hoc_config, Loader=ruamel.yaml.SafeLoader)
+            config = _YAML.load(ad_hoc_config)
             if config is None:
                 raise ConfigurationError('Configuration string is empty.')
 
@@ -238,14 +201,3 @@ class Config:
     @staticmethod
     def get_from_dict(dict_: ConfigDict, name: str, *args, **kwargs) -> Any:
         return Config._get(dict_, name, *args, **kwargs)
-
-
-for version_obj in Config._SCHEMA_VERSIONS:
-    schema_base_path = os.path.join(resource_filename(__name__, 'schemas'), 'v{}'.format(version_obj.major))
-    for filename in os.listdir(schema_base_path):
-        full_path = os.path.join(schema_base_path, filename)
-        if not os.path.isfile(full_path) or not full_path.endswith(Config._YAML_SUFFIX):
-            continue
-        module = filename[0:len(filename) - len(Config._YAML_SUFFIX)]
-        logger.debug('Loading  schema {} for module {}, version v{}.'.format(full_path, module, str(version_obj)))
-        Config.add_schema(module=module, version=version_obj, file=full_path)
